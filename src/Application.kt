@@ -20,7 +20,9 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         spaceship()
+        RabbitService().defaultExchangeAndQueue()
     }
+
 
 
 }

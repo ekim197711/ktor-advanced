@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - rmq
+
+networks:
+  rmq:
+    external: false

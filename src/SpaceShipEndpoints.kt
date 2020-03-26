@@ -1,13 +1,16 @@
 package com.example
 
+import com.rabbitmq.client.Channel
+import com.rabbitmq.client.Connection
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
+import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
-import io.ktor.routing.*
+
 
 fun Routing.spaceship(){
     var myship: SpaceShip = SpaceShip()
@@ -22,5 +25,10 @@ fun Routing.spaceship(){
         myship = call.receive<SpaceShip>()
         call.respondText("You have update the spaceship: $myship",
             ContentType.Text.Plain)
+
+        val connection = RabbitService().gimmeFactory().newConnection()
+        val channel = connection.createChannel()
+        channel.basicPublish("mikeexchange",
+        "mykey", null, myship.toString().toByteArray())
     }
 }
