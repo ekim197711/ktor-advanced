@@ -14,6 +14,8 @@ import io.ktor.routing.post
 
 fun Routing.spaceship(){
     var myship: SpaceShip = SpaceShip()
+    val connection = RabbitService().gimmeFactory().newConnection()
+    val channel = connection.createChannel()
     get("/spaceship") {
         call.respondText("The current spaceship is: $myship",
             ContentType.Text.Plain)
@@ -26,8 +28,6 @@ fun Routing.spaceship(){
         call.respondText("You have update the spaceship: $myship",
             ContentType.Text.Plain)
 
-        val connection = RabbitService().gimmeFactory().newConnection()
-        val channel = connection.createChannel()
         channel.basicPublish("mikeexchange",
         "mykey", null, myship.toString().toByteArray())
     }
